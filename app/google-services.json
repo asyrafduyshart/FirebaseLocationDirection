@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "1023350283372",
+    "firebase_url": "https://learnfirebase-c9069.firebaseio.com",
+    "project_id": "learnfirebase-c9069",
+    "storage_bucket": "learnfirebase-c9069.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023350283372:android:2c23b2ea0d547678",
+        "android_client_info": {
+          "package_name": "com.asyraf.firebaselearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023350283372-a3gidv6mr1osm248v20cc193u496drnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv7urZJGOoPKhh_pqo0Cf4wMqr4jtTPyA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023350283372:android:2174a0b183e051de",
+        "android_client_info": {
+          "package_name": "com.asyraf.codan"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023350283372-a3gidv6mr1osm248v20cc193u496drnv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCv7urZJGOoPKhh_pqo0Cf4wMqr4jtTPyA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
