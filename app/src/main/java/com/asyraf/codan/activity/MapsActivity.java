@@ -2,6 +2,7 @@ package com.asyraf.codan.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -61,7 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Button btnRoutting;
     @BindView(R.id.btnCancelRoutting)
     Button btnCancelRoutting;
+    @BindView(R.id.btnChat)
+    Button btnChat;
     private boolean routting = false;
+
+    String allGsonIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         String jsonReceiverUser = getIntent().getStringExtra(Constant.KEY_SEND_USER).split("---")[0];
         String jsonCurrenUser = getIntent().getStringExtra(Constant.KEY_SEND_USER).split("---")[1];
+        allGsonIntent = getIntent().getStringExtra(Constant.KEY_SEND_USER);
         Gson gson = new Gson();
         friendUser = gson.fromJson(jsonReceiverUser, User.class);
         currenUser = gson.fromJson(jsonCurrenUser, User.class);
@@ -91,6 +97,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void setBtnCancelRoutting() {
         routting=false;
         routing(currenLocation,friendLocation);
+    }
+
+    @OnClick(R.id.btnChat)
+    public void setBtnChat(){
+
     }
 
 
@@ -125,7 +136,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
 
-
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                Intent intent=new Intent(MapsActivity.this,ChatRoomActivity.class);
+                intent.putExtra(Constant.KEY_SEND_USER, allGsonIntent);
+                startActivity(intent);
+            }
+        });
         mMap.setMyLocationEnabled(true);
         friendUrl = FirebaseDatabase.getInstance().getReference().child(Constant.CHILD_USERS).child(friendUser.id);
         friendUrl.addValueEventListener(valueEventListenerFriendUser);
@@ -216,9 +234,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
         private View myContentsView;
 
+
         public MyInfoWindowAdapter(Activity context) {
             myContentsView = context.getLayoutInflater().inflate(
                     R.layout.custom_info_contents, null);
+
         }
 
         @Override

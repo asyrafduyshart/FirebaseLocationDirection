@@ -60,7 +60,7 @@ public class ChatRoomActivity extends AppCompatActivity {
         currenUser = gson.fromJson(jsonCurrenUser, User.class);
         long createReceiverUser = Long.parseLong(receiverUser.cratedAt);
         long createCurrenUser = Long.parseLong(currenUser.cratedAt);
-        String roomName = "";
+        String roomName;
         if (createReceiverUser > createCurrenUser) {
             roomName = String.valueOf(createReceiverUser) + String.valueOf(createCurrenUser);
         } else {

@@ -8,9 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.MapsActivity" />
+
     <Button
         android:id="@+id/btnRoutting"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:text="Direct"
@@ -18,9 +20,20 @@
     <Button
         android:id="@+id/btnCancelRoutting"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginRight="100dp"
+        android:layout_marginEnd="100dp"
         android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
         android:text="Exit directions"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnChat"
+        android:layout_width="wrap_content"
+        android:text="Chat"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnRoutting"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

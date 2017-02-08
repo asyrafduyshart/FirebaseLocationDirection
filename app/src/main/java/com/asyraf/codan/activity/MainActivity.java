@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,MapsActivity.class);
             User user=arrUser.get(position);
             Gson gson=new Gson();
-            intent.putExtra(Constant.KEY_SEND_USER,gson.toJson(user).toString()+"---"+gson.toJson(currenUser).toString());
+            intent.putExtra(Constant.KEY_SEND_USER, gson.toJson(user) +"---"+ gson.toJson(currenUser));
             startActivity(intent);
         });
         rootUrl = FirebaseAuth.getInstance();
@@ -80,8 +81,7 @@ public class MainActivity extends AppCompatActivity {
         RxPermissions rxPermissions = new RxPermissions(this); // where this is an Activity instance
 
         // Must be done during an initialization phase like onCreate
-        rxPermissions
-                .request(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION)
+        rxPermissions.request(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION)
                 .subscribe(granted -> {
                     if (granted) { // Always true pre-M
                         startService(new Intent(this, LocationService.class));
