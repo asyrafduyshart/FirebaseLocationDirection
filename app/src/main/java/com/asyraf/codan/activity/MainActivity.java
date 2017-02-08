@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.asyraf.codan.Manifest;
 import com.asyraf.codan.R;
 import com.asyraf.codan.common.Constant;
 import com.asyraf.codan.object.User;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
 
@@ -64,19 +66,35 @@ public class MainActivity extends AppCompatActivity {
         arrUser = new ArrayList<User>();
         allUserAdapter = new AllUserAdapter(MainActivity.this, 0, arrUser);
         lvUser.setAdapter(allUserAdapter);
-        lvUser.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent=new Intent(MainActivity.this,MapsActivity.class);
-                User user=arrUser.get(position);
-                Gson gson=new Gson();
-                intent.putExtra(Constant.KEY_SEND_USER,gson.toJson(user).toString()+"---"+gson.toJson(currenUser).toString());
-                startActivity(intent);
-            }
+        lvUser.setOnItemClickListener((parent, view, position, id) -> {
+            Intent intent=new Intent(MainActivity.this,MapsActivity.class);
+            User user=arrUser.get(position);
+            Gson gson=new Gson();
+            intent.putExtra(Constant.KEY_SEND_USER,gson.toJson(user).toString()+"---"+gson.toJson(currenUser).toString());
+            startActivity(intent);
         });
         rootUrl = FirebaseAuth.getInstance();
         mAuthStateListener = this::setAuthenticatedUser;
         rootUrl.addAuthStateListener(mAuthStateListener);
+
+        RxPermissions rxPermissions = new RxPermissions(this); // where this is an Activity instance
+
+        // Must be done during an initialization phase like onCreate
+        rxPermissions
+                .request(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION)
+                .subscribe(granted -> {
+                    if (granted) { // Always true pre-M
+                        startService(new Intent(this, LocationService.class));
+                        // I can control the camera now
+                    } else {
+                        // Oups permission denied
+                    }
+                });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void setAuthenticatedUser(FirebaseAuth authData) {
