@@ -15,12 +15,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.asyraf.codan.Manifest;
 import com.asyraf.codan.R;
 import com.asyraf.codan.common.Constant;
 import com.asyraf.codan.object.User;
 import com.asyraf.codan.services.LocationService;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +32,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.jetradarmobile.rxlocationsettings.RxLocationSettings;
 import com.tbruyelle.rxpermissions.RxPermissions;
 
 import java.util.ArrayList;
@@ -36,6 +40,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.functions.Action1;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth rootUrl;
@@ -77,19 +82,6 @@ public class MainActivity extends AppCompatActivity {
         rootUrl = FirebaseAuth.getInstance();
         mAuthStateListener = this::setAuthenticatedUser;
         rootUrl.addAuthStateListener(mAuthStateListener);
-
-        RxPermissions rxPermissions = new RxPermissions(this); // where this is an Activity instance
-
-        // Must be done during an initialization phase like onCreate
-        rxPermissions.request(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION)
-                .subscribe(granted -> {
-                    if (granted) { // Always true pre-M
-                        startService(new Intent(this, LocationService.class));
-                        // I can control the camera now
-                    } else {
-                        // Oups permission denied
-                    }
-                });
     }
 
     @Override
@@ -105,6 +97,20 @@ public class MainActivity extends AppCompatActivity {
                 currenUserEmail = authData.getCurrentUser().getEmail();
                 getCurrenUser(authData);
                 getAllUser(authData);
+                RxPermissions rxPermissions = new RxPermissions(this); // where this is an Activity instance
+
+                // Must be done during an initialization phase like onCreate
+                rxPermissions.request(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION)
+                        .subscribe(granted -> {
+                            if (granted) { // Always true pre-M
+                                startService(new Intent(this, LocationService.class));
+                                ensureLocationSettings();
+                                // I can control the camera now
+                            } else {
+                                // Oups permission denied
+                            }
+                        });
+
             } else {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 finish();
@@ -138,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
             User user = dataSnapshot.getValue(User.class);
-            tvUserName.setText("Hello "+user.name);
+            tvUserName.setText(String.format("Hello %s", user.name));
         }
 
         @Override
@@ -252,6 +258,16 @@ public class MainActivity extends AppCompatActivity {
             }
             return convertView;
         }
+    }
+
+    private void ensureLocationSettings() {
+        LocationSettingsRequest locationSettingsRequest = new LocationSettingsRequest.Builder()
+                .addLocationRequest(LocationRequest.create().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY))
+                .build();
+        RxLocationSettings.with(this).ensure(locationSettingsRequest)
+                .subscribe(enabled -> {
+                    Toast.makeText(MainActivity.this, enabled ? "Enabled" : "Failed", Toast.LENGTH_LONG).show();
+                });
     }
 
 }

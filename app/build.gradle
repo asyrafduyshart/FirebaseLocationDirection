@@ -40,6 +40,7 @@ dependencies {
 
     compile 'io.reactivex:rxjava:1.2.1'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.1@aar'
+    compile 'com.github.jetradarmobile:android-rxlocationsettings:1.1.0'
 
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'

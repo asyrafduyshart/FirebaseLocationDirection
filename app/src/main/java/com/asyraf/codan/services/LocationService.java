@@ -151,14 +151,11 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
         mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
-        updateUI();
-        Toast.makeText(this, getResources().getString(R.string.location_updated_message),
-                Toast.LENGTH_SHORT).show();
-
+//        updateUI();
         try {
             urlCurrenUser.child(Constant.CHILD_LATITUDE).setValue(location.getLatitude());
             urlCurrenUser.child(Constant.CHILD_LONGITUDE).setValue(location.getLongitude());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         EventBus.getDefault().post(location);
@@ -257,6 +254,8 @@ public class LocationService extends Service implements GoogleApiClient.Connecti
      * Updates the latitude, the longitude, and the last location time in the UI.
      */
     private void updateUI() {
+        Toast.makeText(this, getResources().getString(R.string.location_updated_message),
+                Toast.LENGTH_SHORT).show();
         Toast.makeText(this, "Latitude: =" + mCurrentLocation.getLatitude() + " Longitude:=" + mCurrentLocation
                 .getLongitude(), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "Latitude:==" + mCurrentLocation.getLatitude() + "\n Longitude:==" + mCurrentLocation.getLongitude
